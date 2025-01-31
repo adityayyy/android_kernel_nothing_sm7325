@@ -1780,6 +1780,8 @@ int path_umount(struct path *path, int flags)
 	 return ret;
  }
 
+EXPORT_SYMBOL(path_umount);
+
 static bool is_mnt_ns_file(struct dentry *dentry)
 {
 	/* Is this a proxy for a mount namespace? */
