@@ -120,12 +120,11 @@ static void tcs_cmd_data(struct bcm *bcms, int count, u32 ab, u32 ib,
 		u32 *data)
 {
 	int i;
-	u64 total_width;
 
 	for (i = 0; i < count; i++) {
 		bool valid = true;
 		bool commit = false;
-		u64 avg, peak, x, y;
+		u64 avg, total_width, peak, x, y;
 
 		if (i == count - 1 || bcms[i].vcd != bcms[i + 1].vcd)
 			commit = true;
@@ -146,11 +145,10 @@ static void tcs_cmd_data(struct bcm *bcms, int count, u32 ab, u32 ib,
 		/* Multiple the bandwidth by the width of the connection */
 		avg = ((u64) ab) * bcms[i].width;
 
-		total_width = bcms[i].buswidth * bcms[i].channels;
-
 		/* And then divide by the total width across channels */
+		total_width = bcms[i].buswidth * bcms[i].channels;
 		if (total_width)
-			do_div(avg, (u32) total_width);
+			do_div(avg, total_width);
 
 		peak = ((u64) ib) * bcms[i].width;
 		do_div(peak, bcms[i].buswidth);

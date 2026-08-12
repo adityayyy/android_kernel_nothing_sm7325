@@ -1002,11 +1002,11 @@ void adreno_active_count_put(struct adreno_device *adreno_dev);
 #define adreno_is_a620(x) false
 #define adreno_is_a630(x) false
 #define adreno_is_a640(x) false
+#define adreno_is_a643(x) false
 #define adreno_is_a650(x) false
 #define adreno_is_a680(x) false
 #define adreno_is_a702(x) false
 #define adreno_is_a642(x) false
-#define adreno_is_a643(x) false
 #define adreno_is_a615_family(x) false
 #define adreno_is_a640_family(x) false
 #define adreno_is_a619_holi(x) false
@@ -1015,9 +1015,10 @@ void adreno_active_count_put(struct adreno_device *adreno_dev);
 
 #define adreno_is_a6xx(x) true
 #define adreno_is_a660v2(x) true
-#define adreno_is_a650_family(x) true
 #define adreno_is_a642l(x) true
+#define adreno_is_a650_family(x) true
 #define adreno_is_a660(x) true
+
 /*
  * adreno_checkreg_off() - Checks the validity of a register enum
  * @adreno_dev:		Pointer to adreno device

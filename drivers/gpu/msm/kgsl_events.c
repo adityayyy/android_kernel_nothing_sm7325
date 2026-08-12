@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2011-2019, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
  */
 
 #include <linux/debugfs.h>
@@ -37,7 +37,7 @@ static void _kgsl_event_worker(struct kthread_work *work)
 	struct kgsl_event *event = container_of(work, struct kgsl_event, work);
 
 	trace_kgsl_fire_event(id, event->timestamp, event->result,
-		jiffies - event->created, event->func, event->prio);
+		jiffies - event->created, event->func);
 
 	event->func(event->device, event->group, event->priv, event->result);
 
@@ -185,8 +185,10 @@ void kgsl_cancel_event(struct kgsl_device *device,
 
 	list_for_each_entry_safe(event, tmp, &group->events, node) {
 		if (timestamp == event->timestamp && func == event->func &&
-			event->priv == priv)
+			event->priv == priv) {
 			signal_event(device, event, KGSL_EVENT_CANCELLED);
+			break;
+		}
 	}
 
 	spin_unlock(&group->lock);
@@ -267,11 +269,10 @@ int kgsl_add_event(struct kgsl_device *device, struct kgsl_event_group *group,
 	event->func = func;
 	event->created = jiffies;
 	event->group = group;
-	event->prio = KGSL_EVENT_REGULAR_PRIORITY;
 
 	kthread_init_work(&event->work, _kgsl_event_worker);
 
-	trace_kgsl_register_event(KGSL_CONTEXT_ID(context), timestamp, func, KGSL_EVENT_REGULAR_PRIORITY);
+	trace_kgsl_register_event(KGSL_CONTEXT_ID(context), timestamp, func);
 
 	spin_lock(&group->lock);
 
